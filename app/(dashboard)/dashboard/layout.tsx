@@ -1,48 +1,32 @@
-import { notFound } from "next/navigation"
+import Link from "next/link"
 
-import { dashboardConfig } from "@/config/dashboard"
-import { getCurrentUser } from "@/lib/session"
+import { marketingConfig } from "@/config/marketing"
+import { cn } from "@/lib/utils"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { MainNav } from "@/components/main-nav"
-import { DashboardNav } from "@/components/nav"
 import { SiteFooter } from "@/components/site-footer"
 import { UserAccountNav } from "@/components/user-account-nav"
+import { notFound } from "next/navigation"
+import useAuthModal from "@/hooks/use-auth"
 
-interface DashboardLayoutProps {
-    children?: React.ReactNode
+
+interface MarketingLayoutProps {
+    children: React.ReactNode
 }
 
-export default async function DashboardLayout({
+export default async function MarketingLayout({
     children,
-}: DashboardLayoutProps) {
-    const user = await getCurrentUser()
-
-    if (!user) {
-        return notFound()
-    }
+}: MarketingLayoutProps) {
 
     return (
-        <div className="flex min-h-screen flex-col space-y-6">
-            <header className="sticky top-0 z-40 border-b bg-background">
-                <div className="container flex h-16 items-center justify-between py-4">
-                    <MainNav items={dashboardConfig.mainNav} />
-                    <UserAccountNav
-                        user={{
-                            name: user.name,
-                            image: user.image,
-                            email: user.email,
-                        }}
-                    />
+        <div className="flex min-h-screen flex-col">
+            <header className="container z-40 bg-background">
+                <div className="flex h-20 items-center justify-between py-6">
+                    <MainNav items={marketingConfig.mainNav} />
                 </div>
             </header>
-            <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
-                <aside className="hidden w-[200px] flex-col md:flex">
-                    <DashboardNav items={dashboardConfig.sidebarNav} />
-                </aside>
-                <main className="flex w-full flex-1 flex-col overflow-hidden">
-                    {children}
-                </main>
-            </div>
-            <SiteFooter className="border-t" />
+            <main className="flex-1">{children}</main>
+            <SiteFooter />
         </div>
     )
 }

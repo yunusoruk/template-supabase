@@ -7,6 +7,9 @@ import { siteConfig } from '@/config/site'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Analytics } from '@/components/analytics'
 import { Toaster } from '@/components/ui/toaster'
+import SupabaseProvider from '@/components/providers/supabase-provider'
+import ModalProvider from '@/components/providers/modal-provider'
+import UserProvider from '@/components/providers/user-provider'
 
 const fontSans = FontSans({ subsets: ['latin'], variable: "--font-sans" })
 
@@ -80,11 +83,16 @@ export default function RootLayout({
           fontHeading.variable
         )}
       >
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem >
-          {children}
-          <Analytics />
-          <Toaster />
-        </ThemeProvider>
+        <SupabaseProvider>
+          <UserProvider>
+            <ThemeProvider attribute='class' defaultTheme='system' enableSystem >
+              {children}
+              <Analytics />
+              <ModalProvider />
+              <Toaster />
+            </ThemeProvider>
+          </UserProvider>
+        </SupabaseProvider>
       </body>
     </html>
   )
