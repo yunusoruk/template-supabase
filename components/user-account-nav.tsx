@@ -10,16 +10,18 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { UserAvatar } from "@/components/user-avatar"
-import { UserDetails } from "@/types/user"
+import { Profile, UserDetails } from "@/types/user"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { useRouter } from "next/navigation"
 import { toast } from "@/hooks/use-toast"
+import React from 'react'
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
     user: UserDetails
+    profile: Profile
 }
 
-export function UserAccountNav({ user }: UserAccountNavProps) {
+export function UserAccountNav({ user, profile }: UserAccountNavProps) {
     const router = useRouter();
     const supabaseClient = useSupabaseClient();
 
@@ -33,18 +35,18 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
             })
         }
     }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <UserAvatar
-                    user={{ name: user.first_name || null, image: user.avatar_url || null }}
-                    className="h-8 w-8"
+                    profile={profile}
                 />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <div className="flex items-center justify-start gap-2 p-2">
                     <div className="flex flex-col space-y-1 leading-none">
-                        {user.first_name && <p className="font-medium">{user.first_name}</p>}
+                        {profile.username && <p className="font-medium">{profile.username}</p>}
                         {user.email && (
                             <p className="w-[200px] truncate text-sm text-muted-foreground">
                                 {user.email}

@@ -13,22 +13,21 @@ import useAuthModal from "@/hooks/use-auth"
 import { useUser } from "@/hooks/use-user"
 import { Button } from "./ui/button"
 import { UserAccountNav } from "./user-account-nav"
+import { Profile } from "@/types/user"
 
 interface MainNavProps {
     items?: MainNavItem[]
     children?: React.ReactNode
+    profile: Profile
 }
 
-export function MainNav({ items, children }: MainNavProps) {
+export function MainNav({ items, children, profile }: MainNavProps) {
     const segment = useSelectedLayoutSegment()
     const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
 
-    const { isOpen, onOpen } = useAuthModal()
+    const { onOpen } = useAuthModal()
 
-    const { user } = useUser();
-
-    console.log(user);
-
+    const { user, isLoading } = useUser();
 
     return (
         <>
@@ -70,16 +69,16 @@ export function MainNav({ items, children }: MainNavProps) {
                 )}
             </div>
             <div className="">
-
-                {user ? (
+                {isLoading ? (
+                    null
+                ) : user ? (
                     <UserAccountNav
                         user={{
                             id: user.id,
                             email: user.email
                         }}
+                        profile={profile}
                     />
-
-
                 ) : (
                     <nav>
                         <Button onClick={() => onOpen()}>

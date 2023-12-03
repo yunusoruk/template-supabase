@@ -1,22 +1,17 @@
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 
-import { redirect } from "next/navigation"
-
+import { Database } from '@/types/supabase'
+import AccountForm from '@/components/account/account-form'
 import { DashboardHeader } from "@/components/header"
 import { DashboardShell } from "@/components/shell"
-import { useUser } from "@/hooks/use-user"
 
-export const metadata = {
-    title: "Settings",
-    description: "Manage account and website settings.",
-}
+export default async function Account() {
+    const supabase = createServerComponentClient<Database>({ cookies })
 
-export default async function SettingsPage() {
-
-    // const { user } = useUser()
-
-    // if (!user) {
-    //     redirect("/")
-    // }
+    const {
+        data: { session },
+    } = await supabase.auth.getSession()
 
     return (
         <DashboardShell>
@@ -25,7 +20,7 @@ export default async function SettingsPage() {
                 text="Manage account and website settings."
             />
             <div className="grid gap-10">
-                {/* <UserSettingsForm user={{ id: user.id, name: user.name || "" }} /> */}
+                <AccountForm session={session} />
             </div>
         </DashboardShell>
     )
